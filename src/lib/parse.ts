@@ -34,7 +34,7 @@ export const parse = (content: string, parent: Record<string, any> = {}) => {
       if (type === "int") {
         acc[property] = parseInt(value, 10);
       } else {
-        acc[property] = decodeURIComponent(value);
+        acc[property] = value;
       }
     }
     return acc;

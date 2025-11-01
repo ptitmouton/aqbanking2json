@@ -12,7 +12,7 @@ test("parse char values", () => {
   const content = `char name="John%20Doe"`;
   const parent: Record<string, any> = {};
   const result = parse(content, parent);
-  expect(result.name).toBe("John Doe");
+  expect(result.name).toBe("John%20Doe");
 });
 
 test("parse nested object", () => {
