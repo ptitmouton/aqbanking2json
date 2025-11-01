@@ -34,6 +34,7 @@ jobs:
           for target in "${targets[@]}"; do
             echo "Building for target: $target"
             bun build --compile --target bun-$target ./src/index.ts --outfile aqbanking2json-$target
+          done
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
