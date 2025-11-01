@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - "**"
+    paths:
+      - "src/**"
+      - "package.json"
+      - "bun.lock"
+      - "tsconfig.json"
+    tags-ignore:
+      - "v*"
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Run tests
+        run: bun test
+
+      - name: Build binary
+        run: |
+          mkdir -p release
+          targets=(linux-x64 linux-arm64 linux-x64-musl	linux-arm64-musl darwin-x64 darwin-arm64 windows-x64)
+          for target in "${targets[@]}"; do
+            echo "Building for target: $target"
+            bun build --compile --target bun-$target ./src/index.ts --outfile aqbanking2json-$target --target $target
+
+      - name: Upload binary artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: aqbanking2json-${{ github.sha }}
+          path: aqbanking2json
+          retention-days: 30
